@@ -9,4 +9,18 @@ The following command will open a docker terminal
 ./into.sh
 ```
 
-
+Tree of OpenREALM workspace:
+```
+.
+├── catkin_ws
+├── data
+├── docker
+├── Eigen3
+├── eigen-3.3.9
+├── g2o
+├── OpenREALM
+├── openvslam
+├── output
+├── Pangolin
+├── realm.rviz
+```
