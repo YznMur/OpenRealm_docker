@@ -31,6 +31,33 @@ RUN cd / && wget https://raw.githubusercontent.com/laxnpander/OpenREALM/dev/tool
 
 RUN cd / && sed -i 's/sudo //g' install_opencv.sh && bash install_opencv.sh && cd ~ && rm -rf *
 
+# RUN wget https://raw.githubusercontent.com/laxnpander/OpenREALM/dev/tools/install_deps.sh
+
+# RUN cd / && sed -i 's/sudo //g' install_deps.sh && apt-get update && export DEBIAN_FRONTEND=noninteractive && \
+# 	bash install_deps.sh && rm -rf /var/lib/apt/lists/*
+
+# Finally install OpenREALM Librararies
+# RUN set -ex \
+#     && cd ~ && mkdir OpenREALM && cd OpenREALM \
+#     && git clone https://github.com/laxnpander/OpenREALM.git \
+#     && cd OpenREALM && OPEN_REALM_DIR=$(pwd) \
+#     && git submodule init && git submodule update 
+    # && cd $OPEN_REALM_DIR && mkdir build && cd build && cmake -DTESTS_ENABLED=ON -DWITH_PCL=ON .. \
+    # && make -j $(nproc --all) && make install
+
+
+# Create catkin workspace and clone the repo
+# RUN set -ex \
+#     && cd / && mkdir -p catkin_ws/src \
+#     && cd catkin_ws/src \
+#     && git clone https://github.com/laxnpander/OpenREALM_ROS1_Bridge.git
+
+# Set workdir
+# WORKDIR /catkin_ws
+
+# Clone rviz_satellite for rviz plugins
+# RUN set -ex && cd ./src && git clone https://github.com/gareth-cross/rviz_satellite.git
+
 
 #ros-melodic-desktop-full
 
@@ -53,39 +80,16 @@ RUN set -ex \
 
 # Install rosbrindge suite
 RUN apt-get install -yq --no-install-recommends ros-melodic-rosbridge-suite
-COPY ../OpenREALM-aerial-mapping ./OpenREALM
-RUN cd OpenREALM/tools/ && \
-    ./install_deps.sh && \
-    ./install_opencv.sh
-RUN cd ./Pangolin/build/ && \
-    cmake .. && \
-    make -j4 && \
-    make install
 
-RUN cd ./openvslam/build/ && \
-    cmake \
-        -DUSE_PANGOLIN_VIEWER=OFF \
-        -DINSTALL_PANGOLIN_VIEWER=ON \
-        -DUSE_SOCKET_PUBLISHER=OFF \
-        -DUSE_STACK_TRACE_LOGGER=ON \
-        -DBUILD_TESTS=ON \
-        -DBUILD_EXAMPLES=ON \
-        .. && \
-    make -j4 && \
-    make install
+# Setup .bashrc and /ros_entrypoint.sh
+# RUN set -ex \
+#     && echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc \
+#     && echo "source /catkin_ws/devel/setup.bash" >> /root/.bashrc \
+#     && echo 'export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH' >> /root/.bashrc 
 
-RUN cd ./OpenREALM/build/ && \
-    cmake -DTESTS_ENABLED=ON .. && \
-    make -j4 && \
-    make install
 
-RUN git config --global --add safe.directory ./openvslam/3rd/FBoW && \
-    git config --global --add safe.directory ./openvslam
-
-COPY ../catkin_ws ./catkin_ws
-RUN source /opt/ros/melodic/setup.bash && cd catkin_ws \
-    catkin_make -DCMAKE_BUILD_TYPE=Release && \
-    source devel/setup.bash && \
-    ldconfig -v | grep "g2o"
+    # && sed --in-place --expression \
+    # '$isource "/catkin_ws/devel/setup.bash"' \
+    # /ros_entrypoint.sh
 
 CMD ["/bin/bash"]

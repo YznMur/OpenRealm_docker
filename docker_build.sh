@@ -1,1 +1,1 @@
-docker build -t realmap:latest .
+docker build -t realmapping:latest .

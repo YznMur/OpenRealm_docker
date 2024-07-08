@@ -5,7 +5,7 @@ Docker for ```OpenREALM``` system
 The following command will open a docker terminal
 ```
 ./docker_build.sh
-./docker_run.sh
+./docker_all_run.sh
 ./into.sh
 ```
 
